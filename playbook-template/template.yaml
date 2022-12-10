@@ -93,12 +93,12 @@
         group: root
         mode: u=rwx,g=r,o=r
     
-    - name: Copying .db_password.txt file if required for mariadb restoring.
-      local_action: stat path=.db_password.txt
+    - name: Copying .db-password.txt file if required for mariadb restoring.
+      local_action: stat path=.db-password.txt
       register: file
     
-    - name: If the .db_password.txt file exists, copy to /root
-      copy: src=.db_password.txt
+    - name: If the .db-password.txt file exists, copy to /root
+      copy: src=.db-password.txt dest=/root
       when: file.stat.exists
 
     - name: If backup database file is present, copy to /root
