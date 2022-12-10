@@ -128,6 +128,7 @@ sed -i "s|nc-dir|${nextcloud_dir}|" "${virtual_host}"
 sed -i "s|domain|${domain}|" "${virtual_host}"
 sed -i "s|vi-file|${virtual_host}|" "${playbook}"
 sed -i "s|virtual\.conf|${virtual_host}|" "${playbook}"
+sed -i "s|nc-new|${cont_name}|" nodes_update.yaml
 
 ansible-playbook -i hosts.yaml "${playbook}"
 
