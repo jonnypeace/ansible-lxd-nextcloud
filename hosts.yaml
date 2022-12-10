@@ -1,0 +1,17 @@
+---
+all:
+  vars:
+    ansible_connection: lxd
+    ansible_user: root
+    ansible_become: no
+  children:
+    local:
+      vars:
+        ansible_lxd_remote: local
+        ansible_lxd_project: homelab
+      hosts:
+    lxd-host:
+      vars:
+        ansible_lxd_remote: # Enter your lxd remote host, check with 'lxc remote list' 
+      hosts:
+        nc-new: # This will be the name of the LXD container, so will need adjusted.

@@ -1,0 +1,199 @@
+---
+- name: Setup Packages for Nodes
+  hosts: nc-new
+  tasks:
+    - name: Install node packages
+      apt:
+        name:
+          - curl
+          - mariadb-server
+          - php
+          - php-apcu
+          - php-bcmath
+          - php-cli
+          - php-common
+          - php-curl
+          - php-gd
+          - php-gmp
+          - php-imagick
+          - php-intl
+          - php-mbstring
+          - php-mysql
+          - php-zip
+          - php-xml
+          - python3-pymysql
+          - libmagickcore-6.q16-6-extra
+          - bash-completion
+          - wget
+          - unzip
+          - ufw
+          - vim
+        state: present
+
+    - name: Removing ubuntu user from sudo group.
+      ansible.builtin.shell: |
+        if groups ubuntu | grep sudo; then
+          gpasswd -d ubuntu sudo
+        fi
+      args:
+        executable: /bin/bash
+        
+    - name: Copying nextcloud latest or backup nextcloud directory to container
+      copy:
+        src: nc-path
+        dest: /var/www/
+        force: no
+        owner: www-data
+        group: www-data
+        mode: u=rw,g=,o=
+
+    - name: Unarchive a nextcloud zip or backup file.
+      ansible.builtin.unarchive:
+        src: /var/www/nc-source
+        dest: /var/www
+        remote_src: yes
+        creates: /var/www/nc-source
+
+    - name: If using a latest nextcloud zip file, rename it as per config and change hostname and disable defauly apache config
+      ansible.builtin.shell: |
+        if [[ -f /var/www/nextcloud ]]; then
+          mv /var/www/nextcloud /var/www/nc-dir
+        fi
+        if ! grep 'nc-dir' /etc/hosts ; then
+          sed -i 's/nc-new/nc-dir/' /etc/hosts
+          sed -i 's/nc-new/nc-dir/' /etc/hostname
+        fi
+        a2enmod dir env headers mime rewrite ssl
+        phpenmod bcmath gmp imagick intl
+        a2dissite 000-default.conf
+      args:
+        executable: /bin/bash
+        creates: /var/www/nc-dir
+    
+    - name: Copying the virtual hosts file
+      copy:
+        src: virtual.conf
+        dest: /etc/apache2/sites-available/virtual.conf
+        force: yes
+        owner: root
+        group: root
+        mode: u=rwx,g=r,o=r
+
+    - name: a2ensite for your domain vi-file
+      command: a2ensite vi-file
+      args:
+        creates: /etc/apache2/sites-enabled/vi-file
+
+    - name: Copying backup.sh (for backup and restoring) to /root directory of container
+      copy:
+        src: backup.sh
+        dest: /root
+        force: yes
+        owner: root
+        group: root
+        mode: u=rwx,g=r,o=r
+    
+    - name: Copying .db_password.txt file if required for mariadb restoring.
+      local_action: stat path=.db_password.txt
+      register: file
+    
+    - name: If the .db_password.txt file exists, copy to /root
+      copy: src=.db_password.txt
+      when: file.stat.exists
+
+    - name: If backup database file is present, copy to /root
+      local_action: stat path=DATABASE.BK
+      register: file
+
+    - name: copy file if it exists
+      copy: src=DATABASE.BK dest=/root
+      when: file.stat.exists
+
+    - name: Make sure cron.php is added to crontab to run every 5mins
+      ansible.builtin.cron:
+        name: "run cron job every 5 mins"
+        minute: "*/5"
+        user: www-data
+        job: "/usr/bin/php8.1 --define apc.enable_cli=1 -f /var/www/nc-dir/cron.php"
+
+    - name: Ensure memory limit = 512M is updated in section "[php]" in php.ini
+      community.general.ini_file:
+        path: /etc/php/8.1/apache2/php.ini
+        section: PHP
+        option: memory_limit
+        value: 512M
+      
+    - name: Ensure upload_max_filesize is updated in section "[php]" in php.ini
+      community.general.ini_file:
+        path: /etc/php/8.1/apache2/php.ini
+        section: PHP
+        option: upload_max_filesize
+        value: 200M
+
+    - name: Ensure max_execution_time is updated in section "[php]" in php.ini
+      community.general.ini_file:
+        path: /etc/php/8.1/apache2/php.ini
+        section: PHP
+        option: max_execution_time
+        value: 360
+
+    - name: Ensure post_max_size is updated in section "[php]" in php.ini
+      community.general.ini_file:
+        path: /etc/php/8.1/apache2/php.ini
+        section: PHP
+        option: post_max_size
+        value: 200M
+
+    - name: Ensure date.timezone is updated in section "[Date]" in php.ini
+      community.general.ini_file:
+        path: /etc/php/8.1/apache2/php.ini
+        section: Date
+        option: date.timezone
+        value: Europe/London
+
+    - name: Ensure opcache enable is updated in section "[opcache]" in php.ini
+      community.general.ini_file:
+        path: /etc/php/8.1/apache2/php.ini
+        section: opcache
+        option: opcache.enable
+        value: 1
+
+    - name: Ensure opcache.interned_strings_buffer is updated in section "[opcache]" in php.ini
+      community.general.ini_file:
+        path: /etc/php/8.1/apache2/php.ini
+        section: opcache
+        option: opcache.interned_strings_buffer
+        value: 8
+
+    - name: Ensure opcache.max_accelerated_files is updated in section "[opcache]" in php.ini
+      community.general.ini_file:
+        path: /etc/php/8.1/apache2/php.ini
+        section: opcache
+        option: opcache.max_accelerated_files
+        value: 10000
+
+    - name: Ensure opcache.memory_consumption is updated in section "[opcache]" in php.ini
+      community.general.ini_file:
+        path: /etc/php/8.1/apache2/php.ini
+        section: opcache
+        option: opcache.memory_consumption
+        value: 128
+
+    - name: Ensure opcache.save_comments is updated in section "[opcache]" in php.ini
+      community.general.ini_file:
+        path: /etc/php/8.1/apache2/php.ini
+        section: opcache
+        option: opcache.save_comments
+        value: 1
+
+    - name: Ensure opcache.revalidate_freq is updated in section "[opcache]" in php.ini
+      community.general.ini_file:
+        path: /etc/php/8.1/apache2/php.ini
+        section: opcache
+        option: opcache.revalidate_freq
+        value: 1
+
+    - name: Rebooting container after configuration
+      ansible.builtin.shell: /usr/sbin/reboot
+      args:
+        executable: /bin/bash

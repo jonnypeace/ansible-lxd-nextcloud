@@ -1,0 +1,27 @@
+# Container Name
+container-name=nc-new
+
+# Shared directory/external storage for nextcloud on LXD host
+host-share=/mnt/shares/nextcloud
+
+# Where to mount the directory/external storage in the container
+cont-mount=/mnt/nextcloud
+
+# For LXD... a name for the device being added to LXD
+share-name=nextcloud
+
+# Nextcloud backup, used for restoring an existing nextcloud installation
+nextcloud-source=/mnt/shares/nextcloud/backup/nextcloud.tar.bz2
+
+# Database backup, used for restoring the database from an existing nextcloud installation - 
+# Will only work with the same nextcloud instance described above.
+tar-db=/mnt/shares/nextcloud/backup/nextcloud-sqlbkp_20221126.bak
+
+# This will be used in your /var/www directory
+www-dir=domain.com
+
+# This will be used in your virtual hosts file.
+domain=domain.com
+
+# This is for your apache2 server.
+virtual-hosts-file=domain.com.conf

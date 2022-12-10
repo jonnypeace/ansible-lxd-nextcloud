@@ -1,0 +1,15 @@
+ <VirtualHost *:80>
+     DocumentRoot "/var/www/nc-dir"
+     ServerName domain
+
+     <Directory "/var/www/nc-dir/">
+         Options MultiViews FollowSymlinks
+         AllowOverride All
+         Order allow,deny
+         Allow from all
+    </Directory>
+
+    TransferLog /var/log/apache2/nc-dir_access.log
+    ErrorLog /var/log/apache2/nc-dir_error.log
+
+ </VirtualHost>
