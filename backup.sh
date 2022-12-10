@@ -33,6 +33,7 @@ fi
 
 if [[ $1 == "restore" ]]; then
 
+    sudo -u www-data php --define apc.enable_cli=1 -f "${nextcloud_dir}"/occ maintenance:mode --on
 #   change into /var/www and extract backup files
     tar -xf "${nc_backup}" -C /var/www/
 #   Remove any previous nextcloud databases and create a new one.
