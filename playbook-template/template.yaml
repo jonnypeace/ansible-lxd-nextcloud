@@ -114,7 +114,7 @@
         name: "run cron job every 5 mins"
         minute: "*/5"
         user: www-data
-        job: "/usr/bin/php8.1 --define apc.enable_cli=1 -f /var/www/nc-dir/cron.php"
+        job: "/usr/bin/php --define apc.enable_cli=1 -f /var/www/nc-dir/cron.php"
 
     - name: Ensure memory limit = 512M is updated in section "[php]" in php.ini
       community.general.ini_file:
