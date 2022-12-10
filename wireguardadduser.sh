@@ -5,7 +5,7 @@
 #to save myself some typing time, for the $num variable, i just increment by 1 and this is the last digit of the IP.
 #check the wg0.conf file to see which clients are using which IP's.
 #also update your endpoint ip address, or i use dynamic dns for this
-#choose which DNS you'd like to use line 34
+#choose which DNS you'd like to use.
 
 # Creating server side keys
 
