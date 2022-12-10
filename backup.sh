@@ -46,5 +46,6 @@ if [[ $1 == "restore" ]]; then
     find "$db_backup"/*sqlbkp*.bak
     read -rp "Enter Path and file name for mariadb backup: " ans
     mysql -h localhost -u nextcloud --password="${db_pass}" nextcloud < "${ans}"
+    sudo -u www-data php --define apc.enable_cli=1 -f "${nextcloud_dir}"/occ maintenance:mode --off
     sudo -u www-data php --define apc.enable_cli=1 -f "${nextcloud_dir}"/occ maintenance:data-fingerprint
 fi

@@ -170,7 +170,9 @@ cat << EOF
 
   Commands for mariadb database and user creation:
 
-  Change the password from my password to something a bit more secure.... :-)
+  Change the password from mypassword to something a bit more secure.
+
+  If you will be restoring from a database backup, use the password for that database.
 
     - CREATE DATABASE nextcloud;
     - SHOW DATABASES;
