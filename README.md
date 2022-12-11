@@ -1,11 +1,5 @@
-# ansible-lxd-nextcloud
+# Ansible / Bash - Nextcloud Deployment - LXD
 
----
-title: Ansible / Bash - Nextcloud Deployment - LXD
-date: 2022-12-10 13:00:00
-categories: [bash,ansible,scripting,ubuntu,lxd,nextcloud,mariadb,backup]
-tags: [bash,ansible,lxd,nextcloud]
----
 
 # Easy Nextcloud Deployment using bash with ansible.
 
