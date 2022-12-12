@@ -9,7 +9,7 @@ If not done so already, perhaps explore the idea of an LXD host, as i've written
 
 Since this is taking place over LXD, there's no need to use SSH. You can use _lxc remote switch 'host'_ and this will work. This means you don't need ansible vault.
 
-I have used docker for such instances, but I quite like what Ubuntu are doing right now with snaps, LXD, microceph and microcloud. If you are now aware of these applications, I encourage you to have a look.
+I have used docker for such instances, but I quite like what Ubuntu are doing right now with snaps, LXD, microceph and microcloud. If you are not aware of these applications, I encourage you to have a look.
 
 ## Github
 
