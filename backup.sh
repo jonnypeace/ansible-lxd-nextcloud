@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# This script has been used as a quick way to test the main setup script. Currently requires the addition or removal of comments.
+# A fix will be quite straight forward, and will be updated shortly. Only use if you know what you're doing.
 
 # Modify these paths/files to suit your needs. For database password, i recommend using a separate file
 # Once you've set the password in that file, run this command on it as root...

@@ -1,6 +1,5 @@
 # Ansible / Bash - Nextcloud Deployment - LXD
 
-
 # Easy Nextcloud Deployment using bash with ansible.
 
 There are probably ways to make this work with ansible only, but I thought I would use a mix of skills, and it seems to work with just a few configuration adjustments.
@@ -10,6 +9,12 @@ If not done so already, perhaps explore the idea of an LXD host, as i've written
 Since this is taking place over LXD, there's no need to use SSH. You can use _lxc remote switch 'host'_ and this will work. This means you don't need ansible vault.
 
 I have used docker for such instances, but I quite like what Ubuntu are doing right now with snaps, LXD, microceph and microcloud. If you are not aware of these applications, I encourage you to have a look.
+
+Improvements:
+
+backup.sh - 
+
+* This script has been used as a quick way to test the main setup script. Currently requires the addition or removal of comments. A fix will be quite straight forward, and will be updated shortly. Only use if you know what you're doing.
 
 ## Github
 
